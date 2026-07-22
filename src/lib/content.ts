@@ -49,6 +49,8 @@ export const team = [
     label: "Arq.",
     role: "Arquiteta e urbanista · CEO e fundadora",
     photo: "/team/janayne.jpg",
+    // Posição do rosto na foto (object-position), para manter o rosto centralizado no card recortado.
+    facePosition: "50% 15%",
     bio: "Arquiteta e urbanista formada pela Cescage, mãe do Frederick, de 3 anos, esposa e sócia do Fabrício. Acredita que todo projeto começa pelas pessoas que vão viver ali — para ela, arquitetura é sobre criar lares pensados para a rotina, os momentos e a história de cada família.",
   },
   {
@@ -56,12 +58,14 @@ export const team = [
     label: "Arq.",
     role: "Arquiteta e urbanista · Sócia proprietária",
     photo: "/team/rafaelle.jpg",
+    facePosition: "50% 2%",
     bio: "Arquiteta e urbanista formada pela Cescage, sócia da Tabnit e mãe da Maria Valentina. Com um olhar atento aos detalhes e forte senso de responsabilidade técnica, preza por entregas de alta qualidade, aliando organização, precisão e sensibilidade em cada etapa do projeto.",
   },
   {
     name: "Fabrício Garcia",
     label: "Eng.",
     role: "Engenheiro civil · CEO e fundador",
+    facePosition: "50% 8%",
     photo: "/team/fabricio.jpg",
     bio: "Engenheiro civil formado pela Universidade Paulista, pai do Frederick, esposo e sócio da Janayne. Atua com foco em planejamento, execução e gestão de obras, acreditando que uma boa engenharia garante segurança, organização e tranquilidade em todas as etapas.",
   },

@@ -1,7 +1,14 @@
 import Image from "next/image";
-import { aboutImage, business, companyStory, team } from "@/lib/content";
+import dynamic from "next/dynamic";
+import { aboutImage, business, companyStory } from "@/lib/content";
 import Reveal from "@/components/Reveal";
 import CountUp from "@/components/CountUp";
+
+// Lenis + scroll transforms are heavy and below the fold — code-split into their own chunk.
+// (SSR stays on: TeamStack is already SSR-safe via useSyncExternalStore.)
+const TeamStack = dynamic(() => import("@/components/TeamStack"), {
+  loading: () => <div className="h-[600px] animate-pulse bg-muted sm:h-[640px]" />,
+});
 
 export default function About() {
   return (
@@ -55,31 +62,17 @@ export default function About() {
           </div>
         </div>
 
-        <div className="mt-20 grid grid-cols-1 gap-px overflow-hidden border border-border bg-border sm:grid-cols-3">
-          {team.map((member, i) => (
-            <Reveal key={member.name} delay={i * 0.1}>
-              <div className="flex h-full flex-col bg-sand">
-                <div className="relative aspect-[3/4] w-full overflow-hidden bg-muted">
-                  <Image
-                    src={member.photo}
-                    alt={`${member.name}, ${member.role}, da Tabnit Arquitetura`}
-                    fill
-                    sizes="(min-width: 640px) 33vw, 100vw"
-                    className="object-cover"
-                  />
-                </div>
-                <div className="p-8 lg:p-10">
-                  <p className="font-serif text-xl text-ink">
-                    <span className="text-bronze">{member.label}</span> {member.name}
-                  </p>
-                  <p className="mt-1 text-xs uppercase tracking-[0.15em] text-muted-foreground">
-                    {member.role}
-                  </p>
-                  <p className="mt-4 text-sm leading-relaxed text-charcoal">{member.bio}</p>
-                </div>
-              </div>
-            </Reveal>
-          ))}
+        <Reveal delay={0.1} className="mt-24">
+          <p className="mb-4 text-xs font-medium uppercase tracking-[0.3em] text-bronze">
+            Quem assina cada projeto
+          </p>
+          <h3 className="max-w-xl font-serif text-2xl leading-tight text-ink sm:text-3xl">
+            Três pessoas, um mesmo compromisso com cada família
+          </h3>
+        </Reveal>
+
+        <div className="mt-10">
+          <TeamStack />
         </div>
       </div>
     </section>
