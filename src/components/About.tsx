@@ -25,30 +25,32 @@ export default function About() {
                 {companyStory.philosophy}
               </p>
             </Reveal>
-            <Reveal delay={0.2}>
-              <div className="mt-10 border-t border-border pt-8">
-                <CountUp
-                  to={companyStory.stat.value}
-                  prefix={companyStory.stat.prefix}
-                  suffix={companyStory.stat.suffix}
-                  className="font-serif text-4xl text-bronze"
-                />
-                <p className="mt-2 max-w-xs text-sm leading-relaxed text-muted-foreground">
-                  {companyStory.stat.label}
-                </p>
-              </div>
-            </Reveal>
           </div>
 
-          <div className="lg:col-span-7">
-            <Reveal delay={0.15} className="relative aspect-[4/3] w-full overflow-hidden lg:aspect-[16/11]">
-              <Image
-                src={aboutImage}
-                alt="Interior de projeto residencial de alto padrão assinado pela Tabnit Arquitetura"
-                fill
-                sizes="(min-width: 1024px) 58vw, 100vw"
-                className="object-cover"
-              />
+          <div className="pb-40 lg:col-span-7">
+            <Reveal delay={0.15} className="relative">
+              <div className="relative aspect-[4/3] w-full overflow-hidden lg:aspect-[16/11]">
+                <Image
+                  src={aboutImage}
+                  alt="Interior de projeto residencial de alto padrão assinado pela Tabnit Arquitetura"
+                  fill
+                  sizes="(min-width: 1024px) 58vw, 100vw"
+                  className="object-cover"
+                />
+              </div>
+              <div className="absolute left-6 right-6 top-full z-10 -translate-y-16 bg-ink p-6 sm:left-8 sm:right-auto sm:w-72 sm:p-8">
+                <div className="border-t-2 border-bronze pt-4">
+                  <CountUp
+                    to={companyStory.stat.value}
+                    prefix={companyStory.stat.prefix}
+                    suffix={companyStory.stat.suffix}
+                    className="font-serif text-3xl text-bronze sm:text-4xl"
+                  />
+                  <p className="mt-2 text-xs leading-relaxed text-sand/70 sm:text-sm">
+                    {companyStory.stat.label}
+                  </p>
+                </div>
+              </div>
             </Reveal>
           </div>
         </div>
