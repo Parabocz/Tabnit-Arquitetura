@@ -28,14 +28,41 @@ export const business = {
   linktree: "https://linktr.ee/tabnit.arquitetura",
 } as const;
 
-export const architects = [
+// Texto da bio oficial do Instagram (@tabnit.arquitetura), condensado para a seção Sobre do site.
+export const companyStory = {
+  founding:
+    "Fundada em 2020 pela arquiteta Janayne Holodivski e pelo engenheiro Fabrício Garcia, um casal de empreendedores, a Tabnit conta hoje também com Rafaelle Medeiro como sócia proprietária. Há seis anos, atuamos em Ponta Grossa e na região dos Campos Gerais, com compromisso e entregas de qualidade em cada etapa do processo.",
+  philosophy:
+    "Acreditamos que um bom projeto nasce da escuta ativa. Buscamos compreender profundamente as vivências, rotinas e necessidades de cada morador, unindo a história de nossos clientes às soluções técnicas adquiridas ao longo da nossa experiência profissional.",
+  stat: {
+    value: "até 30%",
+    label: "de valorização do imóvel com projetos desenvolvidos com profissionalismo e planejamento",
+  },
+} as const;
+
+// Fotos reais da equipe ainda não recebidas como arquivo — placeholders com iniciais até serem enviadas.
+// Não usar fotos de banco de imagens para representar pessoas reais nomeadas.
+export const team = [
   {
     name: "Janayne Holodivski",
-    role: "Arquiteta",
+    label: "Arq.",
+    role: "Arquiteta e urbanista · CEO e fundadora",
+    initials: "JH",
+    bio: "Arquiteta e urbanista formada pela Cescage, mãe do Frederick, de 3 anos, esposa e sócia do Fabrício. Acredita que todo projeto começa pelas pessoas que vão viver ali — para ela, arquitetura é sobre criar lares pensados para a rotina, os momentos e a história de cada família.",
   },
   {
-    name: "Rafa Medeiro",
-    role: "Arquiteta",
+    name: "Rafaelle Medeiro",
+    label: "Arq.",
+    role: "Arquiteta e urbanista · Sócia proprietária",
+    initials: "RM",
+    bio: "Arquiteta e urbanista formada pela Cescage, sócia da Tabnit e mãe da Maria Valentina. Com um olhar atento aos detalhes e forte senso de responsabilidade técnica, preza por entregas de alta qualidade, aliando organização, precisão e sensibilidade em cada etapa do projeto.",
+  },
+  {
+    name: "Fabrício Garcia",
+    label: "Eng.",
+    role: "Engenheiro civil · CEO e fundador",
+    initials: "FG",
+    bio: "Engenheiro civil formado pela Universidade Paulista, pai do Frederick, esposo e sócio da Janayne. Atua com foco em planejamento, execução e gestão de obras, acreditando que uma boa engenharia garante segurança, organização e tranquilidade em todas as etapas.",
   },
 ] as const;
 
@@ -146,6 +173,12 @@ export const testimonials = [
     rating: 5,
     quote:
       "Trabalho excelente, profissionais muito qualificadas. Indico de olhos fechados.",
+  },
+  {
+    name: "Cris, empreendedora — Ponta Grossa, Paraná",
+    rating: 5,
+    quote:
+      "Eu amei, vocês são incríveis. Captaram a minha mensagem e transformaram esse espaço! Obrigada por fazer parte da realização do meu sonho.",
   },
 ] as const;
 

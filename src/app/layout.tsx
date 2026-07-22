@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     template: "%s | Tabnit Arquitetura",
   },
   description:
-    "Escritório de arquitetura de alto padrão em Ponta Grossa - PR, liderado por Janayne Holodivski e Rafa Medeiro. Projetos residenciais e de interiores autorais. Nota 5,0 com 21 avaliações.",
+    "Escritório de arquitetura de alto padrão em Ponta Grossa - PR, fundado por Janayne Holodivski e Fabrício Garcia, com Rafaelle Medeiro como sócia. Projetos residenciais e de interiores autorais. Nota 5,0 com 21 avaliações.",
   keywords: [
     "arquitetura de alto padrão",
     "arquiteta Ponta Grossa",

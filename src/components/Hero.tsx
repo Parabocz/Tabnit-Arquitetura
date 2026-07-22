@@ -28,8 +28,8 @@ export default function Hero() {
         </Reveal>
         <Reveal delay={0.2}>
           <p className="mt-6 max-w-xl text-base leading-relaxed text-sand/80 sm:text-lg">
-            Projetos residenciais e de interiores autorais, assinados por Janayne Holodivski
-            e Rafa Medeiro em Ponta Grossa - PR.
+            Projetos residenciais e de interiores autorais, assinados por Janayne Holodivski,
+            Rafaelle Medeiro e Fabrício Garcia em Ponta Grossa - PR.
           </p>
         </Reveal>
         <Reveal delay={0.3}>

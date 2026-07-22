@@ -29,7 +29,7 @@ export default function SocialProof() {
           </div>
         </Reveal>
 
-        <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-3">
+        <div className="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {testimonials.map((t, i) => (
             <Reveal key={t.name} delay={i * 0.1}>
               <figure className="flex h-full flex-col border border-sand/15 p-8">
