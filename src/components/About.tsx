@@ -50,20 +50,25 @@ export default function About() {
         <div className="mt-20 grid grid-cols-1 gap-px overflow-hidden border border-border bg-border sm:grid-cols-3">
           {team.map((member, i) => (
             <Reveal key={member.name} delay={i * 0.1}>
-              <div className="flex h-full flex-col bg-sand p-8 lg:p-10">
-                <div
-                  className="flex h-16 w-16 items-center justify-center border border-border font-serif text-lg text-ink"
-                  aria-hidden="true"
-                >
-                  {member.initials}
+              <div className="flex h-full flex-col bg-sand">
+                <div className="relative aspect-[3/4] w-full overflow-hidden bg-muted">
+                  <Image
+                    src={member.photo}
+                    alt={`${member.name}, ${member.role}, da Tabnit Arquitetura`}
+                    fill
+                    sizes="(min-width: 640px) 33vw, 100vw"
+                    className="object-cover"
+                  />
                 </div>
-                <p className="mt-6 font-serif text-xl text-ink">
-                  <span className="text-bronze">{member.label}</span> {member.name}
-                </p>
-                <p className="mt-1 text-xs uppercase tracking-[0.15em] text-muted-foreground">
-                  {member.role}
-                </p>
-                <p className="mt-4 text-sm leading-relaxed text-charcoal">{member.bio}</p>
+                <div className="p-8 lg:p-10">
+                  <p className="font-serif text-xl text-ink">
+                    <span className="text-bronze">{member.label}</span> {member.name}
+                  </p>
+                  <p className="mt-1 text-xs uppercase tracking-[0.15em] text-muted-foreground">
+                    {member.role}
+                  </p>
+                  <p className="mt-4 text-sm leading-relaxed text-charcoal">{member.bio}</p>
+                </div>
               </div>
             </Reveal>
           ))}

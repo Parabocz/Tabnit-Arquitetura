@@ -40,28 +40,27 @@ export const companyStory = {
   },
 } as const;
 
-// Fotos reais da equipe ainda não recebidas como arquivo — placeholders com iniciais até serem enviadas.
-// Não usar fotos de banco de imagens para representar pessoas reais nomeadas.
+// Fotos reais enviadas pelo cliente, recortadas dos cards do Instagram (public/team/*.jpg).
 export const team = [
   {
     name: "Janayne Holodivski",
     label: "Arq.",
     role: "Arquiteta e urbanista · CEO e fundadora",
-    initials: "JH",
+    photo: "/team/janayne.jpg",
     bio: "Arquiteta e urbanista formada pela Cescage, mãe do Frederick, de 3 anos, esposa e sócia do Fabrício. Acredita que todo projeto começa pelas pessoas que vão viver ali — para ela, arquitetura é sobre criar lares pensados para a rotina, os momentos e a história de cada família.",
   },
   {
     name: "Rafaelle Medeiro",
     label: "Arq.",
     role: "Arquiteta e urbanista · Sócia proprietária",
-    initials: "RM",
+    photo: "/team/rafaelle.jpg",
     bio: "Arquiteta e urbanista formada pela Cescage, sócia da Tabnit e mãe da Maria Valentina. Com um olhar atento aos detalhes e forte senso de responsabilidade técnica, preza por entregas de alta qualidade, aliando organização, precisão e sensibilidade em cada etapa do projeto.",
   },
   {
     name: "Fabrício Garcia",
     label: "Eng.",
     role: "Engenheiro civil · CEO e fundador",
-    initials: "FG",
+    photo: "/team/fabricio.jpg",
     bio: "Engenheiro civil formado pela Universidade Paulista, pai do Frederick, esposo e sócio da Janayne. Atua com foco em planejamento, execução e gestão de obras, acreditando que uma boa engenharia garante segurança, organização e tranquilidade em todas as etapas.",
   },
 ] as const;
