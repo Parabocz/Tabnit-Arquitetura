@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { business, heroImage } from "@/lib/content";
 import Reveal from "@/components/Reveal";
+import AnimatedHeadline from "@/components/AnimatedHeadline";
 
 export default function Hero() {
   return (
@@ -21,11 +22,10 @@ export default function Hero() {
             {business.category} · {business.city}
           </p>
         </Reveal>
-        <Reveal delay={0.1}>
-          <h1 className="max-w-3xl font-serif text-4xl leading-[1.1] text-sand sm:text-5xl lg:text-6xl">
-            Arquitetura de alto padrão que traduz o modo de viver de cada família
-          </h1>
-        </Reveal>
+        <AnimatedHeadline
+          text="Arquitetura de alto padrão que traduz o modo de viver de cada família"
+          className="max-w-3xl font-serif text-4xl leading-[1.1] text-sand sm:text-5xl lg:text-6xl"
+        />
         <Reveal delay={0.2}>
           <p className="mt-6 max-w-xl text-base leading-relaxed text-sand/80 sm:text-lg">
             Projetos residenciais e de interiores autorais, assinados por Janayne Holodivski,

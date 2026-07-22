@@ -35,7 +35,9 @@ export const companyStory = {
   philosophy:
     "Acreditamos que um bom projeto nasce da escuta ativa. Buscamos compreender profundamente as vivências, rotinas e necessidades de cada morador, unindo a história de nossos clientes às soluções técnicas adquiridas ao longo da nossa experiência profissional.",
   stat: {
-    value: "até 30%",
+    value: 30,
+    prefix: "até ",
+    suffix: "%",
     label: "de valorização do imóvel com projetos desenvolvidos com profissionalismo e planejamento",
   },
 } as const;

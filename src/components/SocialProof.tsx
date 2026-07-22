@@ -1,5 +1,6 @@
 import { business, testimonials } from "@/lib/content";
 import Reveal from "@/components/Reveal";
+import CountUp from "@/components/CountUp";
 
 function StarIcon({ className }: { className?: string }) {
   return (
@@ -20,11 +21,13 @@ export default function SocialProof() {
                 <StarIcon key={i} className="h-6 w-6" />
               ))}
             </div>
-            <p className="mt-5 font-serif text-4xl text-sand sm:text-5xl">
-              {business.rating.toFixed(1)}
-            </p>
+            <CountUp
+              to={business.rating}
+              decimals={1}
+              className="mt-5 font-serif text-4xl text-sand sm:text-5xl"
+            />
             <p className="mt-2 text-sm uppercase tracking-[0.2em] text-sand/60">
-              {business.reviewCount} avaliações no Google
+              <CountUp to={business.reviewCount} /> avaliações no Google
             </p>
           </div>
         </Reveal>

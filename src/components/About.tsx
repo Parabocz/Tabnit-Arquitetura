@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { aboutImage, business, companyStory, team } from "@/lib/content";
 import Reveal from "@/components/Reveal";
+import CountUp from "@/components/CountUp";
 
 export default function About() {
   return (
@@ -26,7 +27,12 @@ export default function About() {
             </Reveal>
             <Reveal delay={0.2}>
               <div className="mt-10 border-t border-border pt-8">
-                <p className="font-serif text-4xl text-bronze">{companyStory.stat.value}</p>
+                <CountUp
+                  to={companyStory.stat.value}
+                  prefix={companyStory.stat.prefix}
+                  suffix={companyStory.stat.suffix}
+                  className="font-serif text-4xl text-bronze"
+                />
                 <p className="mt-2 max-w-xs text-sm leading-relaxed text-muted-foreground">
                   {companyStory.stat.label}
                 </p>
