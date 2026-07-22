@@ -71,9 +71,9 @@ export default function About() {
           </h3>
         </Reveal>
 
-        <div className="mt-10">
+        <Reveal delay={0.2} className="mt-10">
           <TeamStack />
-        </div>
+        </Reveal>
       </div>
     </section>
   );

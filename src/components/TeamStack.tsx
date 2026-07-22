@@ -1,7 +1,8 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { useEffect, useRef, useSyncExternalStore } from "react";
 import Image from "next/image";
+import { animate, onScroll } from "animejs";
 import ScrollStack, { ScrollStackItem } from "@/components/ScrollStack";
 import { team } from "@/lib/content";
 
@@ -29,20 +30,54 @@ function useReducedMotion() {
   );
 }
 
-function TeamCardContent({ member }: { member: (typeof team)[number] }) {
+function TeamCardContent({
+  member,
+  animateReveal = false,
+}: {
+  member: (typeof team)[number];
+  animateReveal?: boolean;
+}) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!animateReveal) return;
+    const cardEl = cardRef.current;
+    const textEl = textRef.current;
+    if (!cardEl || !textEl) return;
+
+    if (window.matchMedia(REDUCED_MOTION_QUERY).matches) return;
+
+    textEl.style.opacity = "0";
+    const animation = animate(textEl, {
+      opacity: [0, 1],
+      translateY: [24, 0],
+      duration: 600,
+      ease: "outExpo",
+      autoplay: onScroll({ target: cardEl, enter: "bottom 82%" }),
+    });
+
+    return () => {
+      animation.pause();
+    };
+  }, [animateReveal]);
+
   return (
-    <div className="flex h-full flex-col overflow-hidden bg-ink sm:flex-row">
-      <div className="relative h-48 w-full shrink-0 overflow-hidden bg-charcoal sm:h-full sm:w-[42%]">
+    <div
+      ref={cardRef}
+      className="flex flex-col overflow-hidden bg-ink sm:flex-row sm:overflow-visible"
+    >
+      <div className="relative h-64 w-full shrink-0 overflow-hidden bg-charcoal sm:h-auto sm:w-[38%]">
         <Image
           src={member.photo}
           alt={`${member.name}, ${member.role}, da Tabnit Arquitetura`}
           fill
-          sizes="(min-width: 640px) 40vw, 100vw"
+          sizes="(min-width: 640px) 38vw, 100vw"
           style={{ objectPosition: member.facePosition }}
           className="object-cover"
         />
       </div>
-      <div className="flex flex-1 flex-col justify-center p-8 lg:p-12">
+      <div ref={textRef} className="flex flex-col justify-center p-8 lg:p-12">
         <p className="font-serif text-2xl text-sand lg:text-3xl">
           <span className="text-bronze">{member.label}</span> {member.name}
         </p>
@@ -60,7 +95,7 @@ function TeamStaticGrid() {
   return (
     <div className="grid grid-cols-1 gap-6">
       {team.map((member) => (
-        <div key={member.name} className="h-[420px] sm:h-[280px]">
+        <div key={member.name}>
           <TeamCardContent member={member} />
         </div>
       ))}
@@ -76,22 +111,20 @@ export default function TeamStack() {
   }
 
   return (
-    <div className="h-[600px] overflow-hidden border border-border sm:h-[640px]">
-      <ScrollStack
-        className="h-full"
-        itemDistance={80}
-        itemScale={0.02}
-        itemStackDistance={24}
-        baseScale={0.88}
-        stackPosition="18%"
-        scaleEndPosition="8%"
-      >
-        {team.map((member) => (
-          <ScrollStackItem key={member.name} itemClassName="h-[420px] sm:h-[280px]">
-            <TeamCardContent member={member} />
-          </ScrollStackItem>
-        ))}
-      </ScrollStack>
-    </div>
+    <ScrollStack
+      useWindowScroll
+      itemDistance={120}
+      itemScale={0.02}
+      itemStackDistance={24}
+      baseScale={0.88}
+      stackPosition="18%"
+      scaleEndPosition="8%"
+    >
+      {team.map((member) => (
+        <ScrollStackItem key={member.name}>
+          <TeamCardContent member={member} animateReveal />
+        </ScrollStackItem>
+      ))}
+    </ScrollStack>
   );
 }

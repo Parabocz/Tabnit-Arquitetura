@@ -217,12 +217,14 @@ export default function ScrollStack({
       const lenis = new Lenis({
         duration: 1.2,
         easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
         touchMultiplier: 2,
         infinite: false,
         wheelMultiplier: 1,
         lerp: 0.1,
         syncTouch: true,
         syncTouchLerp: 0.075,
+        anchors: true,
       });
 
       lenis.on("scroll", handleScroll);
@@ -308,8 +310,10 @@ export default function ScrollStack({
     };
   }, [itemDistance, useWindowScroll, setupLenis, updateCardTransforms]);
 
+  // In window-scroll mode the page itself scrolls — cancel the CSS class's
+  // nested-scroll-container styling (overflow-y/height) so there's no inner scrollbar.
   const scrollerStyle: CSSProperties = useWindowScroll
-    ? {}
+    ? { overflow: "visible", height: "auto", willChange: "auto" }
     : { position: "relative", width: "100%", height: "100%" };
 
   return (
