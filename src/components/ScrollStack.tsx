@@ -61,6 +61,11 @@ export default function ScrollStack({
   const cardsRef = useRef<HTMLElement[]>([]);
   const lastTransformsRef = useRef<Map<number, CardTransform>>(new Map());
   const isUpdatingRef = useRef(false);
+  // Cached separately from scroll: on mobile, window.innerHeight changes as the
+  // browser chrome (address bar) shows/hides while scrolling, which would make
+  // every trigger position recompute slightly differently each frame and read
+  // as the cards trembling. Only refresh this on resize, not on every scroll tick.
+  const containerHeightRef = useRef(0);
 
   const calculateProgress = useCallback((scrollTop: number, start: number, end: number) => {
     if (scrollTop < start) return 0;
@@ -79,13 +84,13 @@ export default function ScrollStack({
     if (useWindowScroll) {
       return {
         scrollTop: window.scrollY,
-        containerHeight: window.innerHeight,
+        containerHeight: containerHeightRef.current || window.innerHeight,
       };
     }
     const scroller = scrollerRef.current;
     return {
       scrollTop: scroller?.scrollTop ?? 0,
-      containerHeight: scroller?.clientHeight ?? 0,
+      containerHeight: containerHeightRef.current || scroller?.clientHeight || 0,
     };
   }, [useWindowScroll]);
 
@@ -264,6 +269,28 @@ export default function ScrollStack({
     lenisRef.current = lenis;
     return lenis;
   }, [handleScroll, useWindowScroll]);
+
+  useLayoutEffect(() => {
+    const updateContainerHeight = () => {
+      containerHeightRef.current = useWindowScroll
+        ? window.innerHeight
+        : (scrollerRef.current?.clientHeight ?? 0);
+    };
+
+    updateContainerHeight();
+
+    let resizeTimeout: ReturnType<typeof setTimeout>;
+    const handleResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(updateContainerHeight, 150);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      clearTimeout(resizeTimeout);
+    };
+  }, [useWindowScroll]);
 
   useLayoutEffect(() => {
     const scroller = scrollerRef.current;
