@@ -66,6 +66,13 @@ export default function ScrollStack({
   // every trigger position recompute slightly differently each frame and read
   // as the cards trembling. Only refresh this on resize, not on every scroll tick.
   const containerHeightRef = useRef(0);
+  // Each card's document-relative offset, measured once (not on every scroll
+  // frame). `transform` never affects layout, so these stay valid while
+  // scrolling — reading them fresh via getBoundingClientRect() on every tick
+  // instead forces a synchronous layout recalculation right after the previous
+  // card's style write, which is what was actually causing the trembling.
+  const cardOffsetsRef = useRef<number[]>([]);
+  const endElementOffsetRef = useRef(0);
 
   const calculateProgress = useCallback((scrollTop: number, start: number, end: number) => {
     if (scrollTop < start) return 0;
@@ -105,6 +112,19 @@ export default function ScrollStack({
     [useWindowScroll]
   );
 
+  // Measures every card's (and the end spacer's) offset once. Must run after
+  // layout has settled (post-mount, post-resize, post-webfont-swap) — never
+  // from inside the scroll handler, since getBoundingClientRect() there is
+  // what forces a synchronous layout recalculation on every frame.
+  const measureOffsets = useCallback(() => {
+    cardOffsetsRef.current = cardsRef.current.map((card) => getElementOffset(card));
+
+    const endElement = useWindowScroll
+      ? document.querySelector<HTMLElement>(".scroll-stack-end")
+      : scrollerRef.current?.querySelector<HTMLElement>(".scroll-stack-end");
+    endElementOffsetRef.current = endElement ? getElementOffset(endElement) : 0;
+  }, [useWindowScroll, getElementOffset]);
+
   const updateCardTransforms = useCallback(() => {
     if (!cardsRef.current.length || isUpdatingRef.current) return;
 
@@ -114,16 +134,12 @@ export default function ScrollStack({
     const stackPositionPx = parsePercentage(stackPosition, containerHeight);
     const scaleEndPositionPx = parsePercentage(scaleEndPosition, containerHeight);
 
-    const endElement = useWindowScroll
-      ? document.querySelector<HTMLElement>(".scroll-stack-end")
-      : scrollerRef.current?.querySelector<HTMLElement>(".scroll-stack-end");
-
-    const endElementTop = endElement ? getElementOffset(endElement) : 0;
+    const endElementTop = endElementOffsetRef.current;
 
     cardsRef.current.forEach((card, i) => {
       if (!card) return;
 
-      const cardTop = getElementOffset(card);
+      const cardTop = cardOffsetsRef.current[i] ?? 0;
       const triggerStart = cardTop - stackPositionPx - itemStackDistance * i;
       const triggerEnd = cardTop - scaleEndPositionPx;
       const pinStart = cardTop - stackPositionPx - itemStackDistance * i;
@@ -138,7 +154,7 @@ export default function ScrollStack({
       if (blurAmount) {
         let topCardIndex = 0;
         for (let j = 0; j < cardsRef.current.length; j++) {
-          const jCardTop = getElementOffset(cardsRef.current[j]);
+          const jCardTop = cardOffsetsRef.current[j] ?? 0;
           const jTriggerStart = jCardTop - stackPositionPx - itemStackDistance * j;
           if (scrollTop >= jTriggerStart) {
             topCardIndex = j;
@@ -176,7 +192,9 @@ export default function ScrollStack({
         Math.abs(lastTransform.blur - newTransform.blur) > 0.1;
 
       if (hasChanged) {
-        const transform = `translate3d(0, ${newTransform.translateY}px, 0) scale(${newTransform.scale}) rotate(${newTransform.rotation}deg)`;
+        const transform = rotationAmount
+          ? `translate3d(0, ${newTransform.translateY}px, 0) scale(${newTransform.scale}) rotate(${newTransform.rotation}deg)`
+          : `translate3d(0, ${newTransform.translateY}px, 0) scale(${newTransform.scale})`;
         const filter = newTransform.blur > 0 ? `blur(${newTransform.blur}px)` : "";
 
         card.style.transform = transform;
@@ -205,12 +223,10 @@ export default function ScrollStack({
     baseScale,
     rotationAmount,
     blurAmount,
-    useWindowScroll,
     onStackComplete,
     calculateProgress,
     parsePercentage,
     getScrollData,
-    getElementOffset,
   ]);
 
   const handleScroll = useCallback(() => {
@@ -282,7 +298,13 @@ export default function ScrollStack({
     let resizeTimeout: ReturnType<typeof setTimeout>;
     const handleResize = () => {
       clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(updateContainerHeight, 150);
+      resizeTimeout = setTimeout(() => {
+        updateContainerHeight();
+        // Layout may genuinely have changed (rotation, viewport resize) —
+        // re-measure card offsets too, then re-apply transforms against them.
+        measureOffsets();
+        updateCardTransforms();
+      }, 150);
     };
 
     window.addEventListener("resize", handleResize);
@@ -290,7 +312,7 @@ export default function ScrollStack({
       window.removeEventListener("resize", handleResize);
       clearTimeout(resizeTimeout);
     };
-  }, [useWindowScroll]);
+  }, [useWindowScroll, measureOffsets, updateCardTransforms]);
 
   useLayoutEffect(() => {
     const scroller = scrollerRef.current;
@@ -309,17 +331,36 @@ export default function ScrollStack({
       if (i < cards.length - 1) {
         card.style.marginBottom = `${itemDistance}px`;
       }
-      card.style.willChange = "transform, filter";
+      card.style.willChange = "transform";
       card.style.transformOrigin = "top center";
-      card.style.backfaceVisibility = "hidden";
-      card.style.transform = "translateZ(0)";
-      card.style.perspective = "1000px";
+      card.style.transform = "translate3d(0, 0, 0)";
+      // Perspective/backface-visibility only matter for the rotateY effect —
+      // skip them otherwise. On mobile GPUs, an unused 3D context on several
+      // overlapping elements is a common cause of compositing shimmer/jitter.
+      if (rotationAmount) {
+        card.style.backfaceVisibility = "hidden";
+        card.style.perspective = "1000px";
+      }
     });
 
+    measureOffsets();
     setupLenis();
     updateCardTransforms();
 
+    // Web fonts swapping in after mount can reflow text and shift card
+    // heights (and therefore every later card's offset) — re-measure once
+    // they're confirmed loaded rather than relying only on the initial pass.
+    let cancelled = false;
+    document.fonts?.ready
+      ?.then(() => {
+        if (cancelled) return;
+        measureOffsets();
+        updateCardTransforms();
+      })
+      .catch(() => {});
+
     return () => {
+      cancelled = true;
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
@@ -331,7 +372,7 @@ export default function ScrollStack({
       transformsCache.clear();
       isUpdatingRef.current = false;
     };
-  }, [itemDistance, useWindowScroll, setupLenis, updateCardTransforms]);
+  }, [itemDistance, rotationAmount, useWindowScroll, setupLenis, updateCardTransforms, measureOffsets]);
 
   // In window-scroll mode the page itself scrolls — cancel the CSS class's
   // nested-scroll-container styling (overflow-y/height) so there's no inner scrollbar.

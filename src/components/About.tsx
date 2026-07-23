@@ -1,14 +1,8 @@
 import Image from "next/image";
-import dynamic from "next/dynamic";
 import { aboutImage, business, companyStory } from "@/lib/content";
 import Reveal from "@/components/Reveal";
 import CountUp from "@/components/CountUp";
-
-// Lenis + scroll transforms are heavy and below the fold — code-split into their own chunk.
-// (SSR stays on: TeamStack is already SSR-safe via useSyncExternalStore.)
-const TeamStack = dynamic(() => import("@/components/TeamStack"), {
-  loading: () => <div className="h-[600px] animate-pulse bg-muted sm:h-[640px]" />,
-});
+import TeamStack from "@/components/TeamStack";
 
 export default function About() {
   return (
